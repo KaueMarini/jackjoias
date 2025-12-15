@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { ChevronLeft, Heart, Share2, Minus, Plus, ShoppingBag, Check, Truck, Shield, RotateCcw } from "lucide-react";
@@ -7,6 +7,8 @@ import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { ChatWidget } from "@/components/ChatWidget";
 import { useToast } from "@/hooks/use-toast";
+import { useCart } from "@/contexts/CartContext";
+import { supabase } from "@/integrations/supabase/client";
 
 import heroRing from "@/assets/hero-ring.jpg";
 import productNecklace from "@/assets/product-necklace.jpg";
@@ -86,12 +88,50 @@ const products = {
 const ProductDetail = () => {
   const { id } = useParams<{ id: string }>();
   const { toast } = useToast();
-  const product = products[id as keyof typeof products];
-
+  const { addItem } = useCart();
+  const mockProduct = products[id as keyof typeof products];
+  
+  const [dbProduct, setDbProduct] = useState<any>(null);
+  const [isLoading, setIsLoading] = useState(true);
   const [selectedImage, setSelectedImage] = useState(0);
   const [selectedSize, setSelectedSize] = useState<string | null>(null);
   const [quantity, setQuantity] = useState(1);
   const [isWishlisted, setIsWishlisted] = useState(false);
+
+  useEffect(() => {
+    const fetchProduct = async () => {
+      if (!id) return;
+      
+      const { data, error } = await supabase
+        .from('products')
+        .select('*')
+        .eq('id', id)
+        .maybeSingle();
+      
+      if (!error && data) {
+        setDbProduct(data);
+      }
+      setIsLoading(false);
+    };
+
+    fetchProduct();
+  }, [id]);
+
+  // Use database product if available, otherwise fall back to mock
+  const product = dbProduct ? {
+    ...dbProduct,
+    images: dbProduct.image_url ? [dbProduct.image_url] : [heroRing],
+    details: dbProduct.description ? [dbProduct.description] : [],
+    tag: null
+  } : mockProduct;
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+      </div>
+    );
+  }
 
   if (!product) {
     return (
@@ -107,7 +147,7 @@ const ProductDetail = () => {
   }
 
   const handleAddToCart = () => {
-    if (!selectedSize) {
+    if (!selectedSize && product.sizes?.length > 0) {
       toast({
         title: "Selecione um tamanho",
         description: "Por favor, escolha um tamanho antes de adicionar ao carrinho.",
@@ -116,9 +156,18 @@ const ProductDetail = () => {
       return;
     }
 
+    addItem({
+      id: product.id,
+      name: product.name,
+      price: product.price,
+      quantity,
+      size: selectedSize || undefined,
+      image_url: product.images?.[0] || product.image_url
+    });
+
     toast({
       title: "Adicionado ao carrinho",
-      description: `${product.name} (${selectedSize}) foi adicionado ao seu carrinho.`,
+      description: `${product.name}${selectedSize ? ` (${selectedSize})` : ''} foi adicionado ao seu carrinho.`,
     });
   };
 
