@@ -3,6 +3,9 @@ import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import heroRing from "@/assets/hero-ring.jpg";
+import productBracelet from "@/assets/product-bracelet.jpg";
+import productEarrings from "@/assets/product-earrings.jpg";
+import productNecklace from "@/assets/product-necklace.jpg";
 
 interface Product {
   id: string;
@@ -11,6 +14,21 @@ interface Product {
   price: number;
   image_url: string | null;
 }
+
+// Map database image paths to imported assets
+const imageMap: Record<string, string> = {
+  '/src/assets/product-ring.jpg': heroRing,
+  '/src/assets/product-bracelet.jpg': productBracelet,
+  '/src/assets/product-earrings.jpg': productEarrings,
+  '/src/assets/product-necklace.jpg': productNecklace,
+};
+
+const getProductImage = (imageUrl: string | null): string => {
+  if (!imageUrl) return heroRing;
+  if (imageMap[imageUrl]) return imageMap[imageUrl];
+  if (imageUrl.startsWith('http')) return imageUrl;
+  return heroRing;
+};
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -70,7 +88,7 @@ export const FeaturedProducts = () => {
               <Link to={`/produto/${product.id}`} className="block">
                 <div className="relative aspect-square overflow-hidden bg-background mb-4">
                   <img
-                    src={product.image_url || heroRing}
+                    src={getProductImage(product.image_url)}
                     alt={product.name}
                     className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                   />
