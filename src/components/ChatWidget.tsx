@@ -25,7 +25,7 @@ export const ChatWidget = () => {
                   <Sparkles className="w-5 h-5 text-primary" />
                 </div>
                 <div>
-                  <h3 className="font-serif text-foreground">Consultor AURUM</h3>
+                  <h3 className="font-serif text-foreground">Consultor Jack</h3>
                   <span className="text-xs text-muted-foreground">Assistente IA</span>
                 </div>
               </div>
@@ -46,7 +46,7 @@ export const ChatWidget = () => {
               </div>
               <div className="bg-cream rounded-sm p-3 max-w-[80%]">
                 <p className="text-sm text-foreground font-sans leading-relaxed">
-                  Olá! Sou seu consultor pessoal de joias. Como posso ajudá-la hoje?
+                  Olá! Sou seu consultor pessoal de joias da Jack Joias. Como posso ajudá-la hoje?
                 </p>
                 <p className="text-sm text-foreground font-sans leading-relaxed mt-2">
                   Posso recomendar peças baseadas no seu estilo, esclarecer dúvidas sobre materiais ou auxiliar na escolha do presente perfeito.
@@ -90,12 +90,12 @@ export const ChatWidget = () => {
         onClick={() => setIsOpen(!isOpen)}
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
-        className="fixed bottom-6 right-6 w-14 h-14 bg-gradient-gold rounded-full shadow-gold flex items-center justify-center z-50 group"
+        className="fixed bottom-6 right-6 w-14 h-14 bg-gradient-to-r from-gold-500 via-gold-400 to-gold-500 rounded-full shadow-gold flex items-center justify-center z-50 group"
       >
         {isOpen ? (
-          <X className="w-6 h-6 text-primary-foreground" />
+          <X className="w-6 h-6 text-foreground" />
         ) : (
-          <MessageCircle className="w-6 h-6 text-primary-foreground" />
+          <MessageCircle className="w-6 h-6 text-foreground" />
         )}
         
         {/* Pulse effect */}
