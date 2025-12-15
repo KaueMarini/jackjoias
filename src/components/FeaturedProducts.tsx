@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import { Link } from "react-router-dom";
 import productNecklace from "@/assets/product-necklace.jpg";
 import productBracelet from "@/assets/product-bracelet.jpg";
 import productEarrings from "@/assets/product-earrings.jpg";
@@ -93,48 +94,46 @@ export const FeaturedProducts = () => {
             <motion.article
               key={product.id}
               variants={itemVariants}
-              className="group cursor-pointer"
+              className="group"
             >
-              {/* Image Container */}
-              <div className="relative aspect-square overflow-hidden bg-background mb-4">
-                <motion.img
-                  src={product.image}
-                  alt={product.name}
-                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                />
-                
-                {/* Tag */}
-                {product.tag && (
-                  <span className="absolute top-4 left-4 bg-primary text-primary-foreground text-xs font-sans tracking-wider uppercase px-3 py-1">
-                    {product.tag}
+              <Link to={`/produto/${product.id}`} className="block">
+                {/* Image Container */}
+                <div className="relative aspect-square overflow-hidden bg-background mb-4">
+                  <img
+                    src={product.image}
+                    alt={product.name}
+                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                  />
+                  
+                  {/* Tag */}
+                  {product.tag && (
+                    <span className="absolute top-4 left-4 bg-primary text-primary-foreground text-xs font-sans tracking-wider uppercase px-3 py-1">
+                      {product.tag}
+                    </span>
+                  )}
+
+                  {/* Hover overlay */}
+                  <div className="absolute inset-0 bg-foreground/0 group-hover:bg-foreground/5 transition-colors duration-300" />
+                  
+                  {/* Quick view button */}
+                  <div className="absolute bottom-4 left-4 right-4 bg-background/95 backdrop-blur-sm text-foreground text-sm font-sans tracking-wider uppercase py-3 text-center opacity-0 group-hover:opacity-100 transition-all duration-300 translate-y-2 group-hover:translate-y-0">
+                    Ver Detalhes
+                  </div>
+                </div>
+
+                {/* Product Info */}
+                <div className="text-center">
+                  <span className="text-xs font-sans tracking-wider text-muted-foreground uppercase">
+                    {product.category}
                   </span>
-                )}
-
-                {/* Hover overlay */}
-                <div className="absolute inset-0 bg-foreground/0 group-hover:bg-foreground/5 transition-colors duration-300" />
-                
-                {/* Quick view button */}
-                <motion.button
-                  initial={{ opacity: 0, y: 10 }}
-                  whileHover={{ scale: 1.02 }}
-                  className="absolute bottom-4 left-4 right-4 bg-background/95 backdrop-blur-sm text-foreground text-sm font-sans tracking-wider uppercase py-3 opacity-0 group-hover:opacity-100 transition-all duration-300 translate-y-2 group-hover:translate-y-0"
-                >
-                  Ver Detalhes
-                </motion.button>
-              </div>
-
-              {/* Product Info */}
-              <div className="text-center">
-                <span className="text-xs font-sans tracking-wider text-muted-foreground uppercase">
-                  {product.category}
-                </span>
-                <h3 className="font-serif text-lg text-foreground mt-1 mb-2 group-hover:text-primary transition-colors duration-300">
-                  {product.name}
-                </h3>
-                <p className="font-sans text-sm text-foreground">
-                  {product.price}
-                </p>
-              </div>
+                  <h3 className="font-serif text-lg text-foreground mt-1 mb-2 group-hover:text-primary transition-colors duration-300">
+                    {product.name}
+                  </h3>
+                  <p className="font-sans text-sm text-foreground">
+                    {product.price}
+                  </p>
+                </div>
+              </Link>
             </motion.article>
           ))}
         </motion.div>
