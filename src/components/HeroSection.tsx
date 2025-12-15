@@ -14,16 +14,11 @@ export const HeroSection = () => {
 
       <div className="container mx-auto px-6 grid lg:grid-cols-2 gap-12 items-center">
         {/* Text Content */}
-        <motion.div
-          initial={{ opacity: 0, y: 40 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, ease: "easeOut" }}
-          className="text-center lg:text-left order-2 lg:order-1"
-        >
+        <div className="text-center lg:text-left order-2 lg:order-1">
           <motion.span
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ delay: 0.3, duration: 0.6 }}
+            transition={{ delay: 0.1, duration: 0.4 }}
             className="inline-block text-sm font-sans tracking-[0.3em] text-primary uppercase mb-4"
           >
             Coleção 2025
@@ -32,7 +27,7 @@ export const HeroSection = () => {
           <motion.h1
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.4, duration: 0.8 }}
+            transition={{ delay: 0.2, duration: 0.5 }}
             className="font-serif text-4xl md:text-5xl lg:text-6xl xl:text-7xl leading-tight text-foreground mb-6"
           >
             Elegância
@@ -43,23 +38,23 @@ export const HeroSection = () => {
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ delay: 0.6, duration: 0.6 }}
+            transition={{ delay: 0.3, duration: 0.4 }}
             className="w-16 h-px bg-primary mx-auto lg:mx-0 mb-6"
           />
 
           <motion.p
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.7, duration: 0.8 }}
+            transition={{ delay: 0.4, duration: 0.5 }}
             className="font-sans text-muted-foreground text-lg md:text-xl max-w-md mx-auto lg:mx-0 mb-8 leading-relaxed"
           >
             Joias exclusivas em ouro 18k, criadas para eternizar seus momentos mais preciosos.
           </motion.p>
 
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.9, duration: 0.8 }}
+            transition={{ delay: 0.5, duration: 0.5 }}
             className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start"
           >
             <Button variant="gold" size="xl">
@@ -69,13 +64,13 @@ export const HeroSection = () => {
               Sob Encomenda
             </Button>
           </motion.div>
-        </motion.div>
+        </div>
 
         {/* Hero Image */}
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 1, ease: "easeOut" }}
+          transition={{ duration: 1 }}
           className="relative order-1 lg:order-2"
         >
           <div className="relative mx-auto w-full max-w-lg">
@@ -91,7 +86,7 @@ export const HeroSection = () => {
             >
               <img
                 src={heroRing}
-                alt="Anel de ouro com diamante - Coleção exclusiva"
+                alt="Anel de ouro com diamante - Coleção exclusiva Jack Joias"
                 className="w-full h-full object-cover"
               />
               

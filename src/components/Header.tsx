@@ -18,15 +18,18 @@ export const Header = () => {
       <nav className="container mx-auto px-6 py-4">
         <div className="flex items-center justify-between">
           {/* Logo */}
-          <motion.a
-            href="/"
+          <motion.div
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.5 }}
-            className="font-serif text-2xl tracking-wider text-foreground"
           >
-            <span className="text-primary">AURUM</span>
-          </motion.a>
+            <a
+              href="/"
+              className="font-serif text-2xl tracking-wider text-foreground"
+            >
+              <span className="text-primary">JACK</span> JOIAS
+            </a>
+          </motion.div>
 
           {/* Desktop Navigation */}
           <motion.ul
