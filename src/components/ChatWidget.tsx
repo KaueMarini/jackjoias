@@ -17,7 +17,7 @@ export const ChatWidget = () => {
     {
       id: "welcome",
       role: "assistant",
-      content: "Olá! Sou seu consultor pessoal de joias da Jack Joias. Como posso ajudá-la hoje? Posso recomendar peças baseadas no seu estilo, esclarecer dúvidas sobre materiais ou auxiliar na escolha do presente perfeito.",
+      content: "Olá! Sou seu consultor pessoal de joias da Jake Joias. Como posso ajudá-la hoje? Posso recomendar peças baseadas no seu estilo, esclarecer dúvidas sobre materiais ou auxiliar na escolha do presente perfeito.",
     },
   ]);
   const [isLoading, setIsLoading] = useState(false);
@@ -114,7 +114,7 @@ export const ChatWidget = () => {
                     <Sparkles className="w-5 h-5 text-primary" />
                   </div>
                   <div>
-                    <h3 className="font-serif text-foreground">Consultor Jack</h3>
+                    <h3 className="font-serif text-foreground">Consultor Jake</h3>
                     <span className="text-xs text-muted-foreground">Assistente IA</span>
                   </div>
                 </div>

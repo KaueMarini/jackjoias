@@ -22,7 +22,7 @@ export const AboutSection = () => {
               <div className="relative overflow-hidden">
                 <img
                   src={aboutImage}
-                  alt="Modelo usando joias Jack Joias"
+                  alt="Modelo usando joias Jake Joias"
                   className="w-full h-auto object-cover"
                 />
               </div>
@@ -59,7 +59,7 @@ export const AboutSection = () => {
             <div className="w-16 h-px bg-primary mb-8" />
 
             <p className="font-sans text-muted-foreground leading-relaxed mb-6">
-              Desde 1998, a Jack Joias tem sido sinônimo de excelência em joalheria artesanal. 
+              Desde 1998, a Jake Joias tem sido sinônimo de excelência em joalheria artesanal. 
               Nossa paixão pelo ofício nasceu de uma tradição familiar que valoriza cada detalhe, 
               cada curva e cada brilho.
             </p>

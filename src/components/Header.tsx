@@ -34,7 +34,7 @@ export const Header = () => {
                 to="/"
                 className="font-serif text-2xl tracking-wider text-foreground"
               >
-                <span className="text-primary">JACK</span> JOIAS
+                <span className="text-primary">JAKE</span> JOIAS
               </Link>
             </motion.div>
 

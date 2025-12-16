@@ -14,7 +14,7 @@ export const Footer = () => {
             transition={{ duration: 0.6 }}
           >
             <h3 className="font-serif text-2xl mb-4">
-              <span className="text-primary">JACK</span> JOIAS
+              <span className="text-primary">JAKE</span> JOIAS
             </h3>
             <p className="font-sans text-sm text-background/70 leading-relaxed mb-6">
               Joalheria artesanal de luxo, especializada em peças exclusivas em ouro 18k desde 1998.
@@ -82,7 +82,7 @@ export const Footer = () => {
               </li>
               <li className="flex items-start gap-3">
                 <Mail className="w-4 h-4 text-primary mt-1 flex-shrink-0" />
-                <span className="font-sans text-sm text-background/70">contato@jackjoias.com.br</span>
+                <span className="font-sans text-sm text-background/70">contato@jakejoias.com.br</span>
               </li>
               <li className="flex items-start gap-3">
                 <MapPin className="w-4 h-4 text-primary mt-1 flex-shrink-0" />
@@ -99,7 +99,7 @@ export const Footer = () => {
         <div className="pt-8 border-t border-background/10">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
             <p className="font-sans text-xs text-background/50">
-              © 2025 Jack Joias. Todos os direitos reservados.
+              © 2025 Jake Joias. Todos os direitos reservados.
             </p>
             <div className="flex gap-6">
               <a href="#" className="font-sans text-xs text-background/50 hover:text-primary transition-colors duration-300">
