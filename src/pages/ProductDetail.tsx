@@ -11,87 +11,13 @@ import { useCart } from "@/contexts/CartContext";
 import { supabase } from "@/integrations/supabase/client";
 
 import heroRing from "@/assets/hero-ring.jpg";
-import productNecklace from "@/assets/product-necklace.jpg";
-import productBracelet from "@/assets/product-bracelet.jpg";
-import productEarrings from "@/assets/product-earrings.jpg";
-
-// Mock product data
-const products = {
-  "1": {
-    id: "1",
-    name: "Anel Solitário Eterno",
-    category: "Anéis",
-    price: 4890,
-    description: "Um clássico atemporal que celebra momentos únicos. Este anel solitário em ouro 18k é adornado com um diamante central de lapidação brilhante, refletindo a luz de forma espetacular.",
-    details: [
-      "Material: Ouro 18k (750)",
-      "Pedra: Diamante natural",
-      "Peso: 3.2g",
-      "Lapidação: Brilhante",
-      "Clareza: VS1",
-      "Cor: F",
-    ],
-    sizes: ["12", "13", "14", "15", "16", "17", "18", "19", "20"],
-    images: [heroRing, productBracelet, productNecklace],
-    tag: "Bestseller",
-  },
-  "2": {
-    id: "2",
-    name: "Colar Mandala Sol",
-    category: "Colares",
-    price: 3290,
-    description: "Inspirado nos raios solares, este colar traz uma mandala delicada em ouro 18k com detalhes artesanais que capturam a luz de forma única.",
-    details: [
-      "Material: Ouro 18k (750)",
-      "Comprimento: 45cm",
-      "Peso: 4.8g",
-      "Fecho: Lagosta",
-    ],
-    sizes: ["45cm", "50cm", "55cm"],
-    images: [productNecklace, heroRing, productEarrings],
-    tag: null,
-  },
-  "3": {
-    id: "3",
-    name: "Bracelete Geométrico",
-    category: "Pulseiras",
-    price: 2890,
-    description: "Design contemporâneo que une linhas geométricas precisas com a tradição da ourivesaria. Uma peça versátil para todas as ocasiões.",
-    details: [
-      "Material: Ouro 18k (750)",
-      "Diâmetro: Ajustável",
-      "Peso: 8.5g",
-      "Acabamento: Polido",
-    ],
-    sizes: ["P", "M", "G"],
-    images: [productBracelet, productNecklace, heroRing],
-    tag: "Novo",
-  },
-  "4": {
-    id: "4",
-    name: "Argolas Clássicas",
-    category: "Brincos",
-    price: 1990,
-    description: "Argolas atemporais que combinam elegância e modernidade. Perfeitas para o dia a dia ou ocasiões especiais.",
-    details: [
-      "Material: Ouro 18k (750)",
-      "Diâmetro: 2.5cm",
-      "Peso: 3.8g (par)",
-      "Fecho: Pressão",
-    ],
-    sizes: ["Único"],
-    images: [productEarrings, productBracelet, productNecklace],
-    tag: null,
-  },
-};
 
 const ProductDetail = () => {
   const { id } = useParams<{ id: string }>();
   const { toast } = useToast();
   const { addItem } = useCart();
-  const mockProduct = products[id as keyof typeof products];
   
-  const [dbProduct, setDbProduct] = useState<any>(null);
+  const [product, setProduct] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [selectedImage, setSelectedImage] = useState(0);
   const [selectedSize, setSelectedSize] = useState<string | null>(null);
@@ -109,21 +35,23 @@ const ProductDetail = () => {
         .maybeSingle();
       
       if (!error && data) {
-        setDbProduct(data);
+        // Get image URL - handle both external URLs and fallback
+        const imageUrl = data.image_url && (data.image_url.startsWith('http://') || data.image_url.startsWith('https://'))
+          ? data.image_url
+          : heroRing;
+        
+        setProduct({
+          ...data,
+          images: [imageUrl],
+          details: data.description ? [data.description] : ["Peça exclusiva em ouro 18k", "Acabamento artesanal", "Certificado de autenticidade incluso"],
+          tag: null
+        });
       }
       setIsLoading(false);
     };
 
     fetchProduct();
   }, [id]);
-
-  // Use database product if available, otherwise fall back to mock
-  const product = dbProduct ? {
-    ...dbProduct,
-    images: dbProduct.image_url ? [dbProduct.image_url] : [heroRing],
-    details: dbProduct.description ? [dbProduct.description] : [],
-    tag: null
-  } : mockProduct;
 
   if (isLoading) {
     return (
@@ -162,7 +90,7 @@ const ProductDetail = () => {
       price: product.price,
       quantity,
       size: selectedSize || undefined,
-      image_url: product.images?.[0] || product.image_url
+      image_url: product.images?.[0]
     });
 
     toast({
@@ -215,29 +143,34 @@ const ProductDetail = () => {
                   src={product.images[selectedImage]}
                   alt={product.name}
                   className="w-full h-full object-cover"
+                  onError={(e) => {
+                    (e.target as HTMLImageElement).src = heroRing;
+                  }}
                 />
               </motion.div>
 
               {/* Thumbnails */}
-              <div className="flex gap-3">
-                {product.images.map((image, index) => (
-                  <button
-                    key={index}
-                    onClick={() => setSelectedImage(index)}
-                    className={`relative w-20 h-20 overflow-hidden rounded-sm transition-all duration-300 ${
-                      selectedImage === index 
-                        ? "ring-2 ring-primary ring-offset-2" 
-                        : "opacity-70 hover:opacity-100"
-                    }`}
-                  >
-                    <img
-                      src={image}
-                      alt={`${product.name} - imagem ${index + 1}`}
-                      className="w-full h-full object-cover"
-                    />
-                  </button>
-                ))}
-              </div>
+              {product.images.length > 1 && (
+                <div className="flex gap-3">
+                  {product.images.map((image: string, index: number) => (
+                    <button
+                      key={index}
+                      onClick={() => setSelectedImage(index)}
+                      className={`relative w-20 h-20 overflow-hidden rounded-sm transition-all duration-300 ${
+                        selectedImage === index 
+                          ? "ring-2 ring-primary ring-offset-2" 
+                          : "opacity-70 hover:opacity-100"
+                      }`}
+                    >
+                      <img
+                        src={image}
+                        alt={`${product.name} - imagem ${index + 1}`}
+                        className="w-full h-full object-cover"
+                      />
+                    </button>
+                  ))}
+                </div>
+              )}
             </div>
 
             {/* Product Info */}
@@ -260,35 +193,37 @@ const ProductDetail = () => {
               <div className="w-16 h-px bg-primary mb-6" />
 
               <p className="font-sans text-muted-foreground leading-relaxed mb-8">
-                {product.description}
+                {product.description || "Peça exclusiva da coleção Jake Joias, produzida artesanalmente com materiais de alta qualidade."}
               </p>
 
               {/* Size Selector */}
-              <div className="mb-8">
-                <div className="flex items-center justify-between mb-3">
-                  <span className="font-sans text-sm font-medium text-foreground">
-                    Tamanho
-                  </span>
-                  <button className="text-xs text-primary hover:underline">
-                    Guia de tamanhos
-                  </button>
-                </div>
-                <div className="flex flex-wrap gap-2">
-                  {product.sizes.map((size) => (
-                    <button
-                      key={size}
-                      onClick={() => setSelectedSize(size)}
-                      className={`min-w-[48px] h-10 px-4 font-sans text-sm border rounded-sm transition-all duration-300 ${
-                        selectedSize === size
-                          ? "bg-primary text-primary-foreground border-primary"
-                          : "bg-transparent text-foreground border-border hover:border-primary"
-                      }`}
-                    >
-                      {size}
+              {product.sizes && product.sizes.length > 0 && (
+                <div className="mb-8">
+                  <div className="flex items-center justify-between mb-3">
+                    <span className="font-sans text-sm font-medium text-foreground">
+                      Tamanho
+                    </span>
+                    <button className="text-xs text-primary hover:underline">
+                      Guia de tamanhos
                     </button>
-                  ))}
+                  </div>
+                  <div className="flex flex-wrap gap-2">
+                    {product.sizes.map((size: string) => (
+                      <button
+                        key={size}
+                        onClick={() => setSelectedSize(size)}
+                        className={`min-w-[48px] h-10 px-4 font-sans text-sm border rounded-sm transition-all duration-300 ${
+                          selectedSize === size
+                            ? "bg-primary text-primary-foreground border-primary"
+                            : "bg-transparent text-foreground border-border hover:border-primary"
+                        }`}
+                      >
+                        {size}
+                      </button>
+                    ))}
+                  </div>
                 </div>
-              </div>
+              )}
 
               {/* Quantity */}
               <div className="mb-8">
@@ -364,7 +299,7 @@ const ProductDetail = () => {
               <div className="py-6 border-t border-border">
                 <h3 className="font-serif text-lg text-foreground mb-4">Detalhes do Produto</h3>
                 <ul className="space-y-2">
-                  {product.details.map((detail, index) => (
+                  {product.details.map((detail: string, index: number) => (
                     <li key={index} className="font-sans text-sm text-muted-foreground">
                       {detail}
                     </li>

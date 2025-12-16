@@ -56,7 +56,7 @@ export const HeroSection = () => {
             >
               <img
                 src={heroRing}
-                alt="Anel de ouro com diamante - Coleção exclusiva Jack Joias"
+                alt="Anel de ouro com diamante - Coleção exclusiva Jake Joias"
                 className="w-full h-full object-cover"
               />
               
