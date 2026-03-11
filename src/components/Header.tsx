@@ -12,6 +12,7 @@ const navLinks = [
   { name: "Colares", href: "#necklaces" },
   { name: "Pulseiras", href: "#bracelets" },
   { name: "Brincos", href: "#earrings" },
+  { name: "Consultor", href: "#consultor" },
 ];
 
 export const Header = () => {
