@@ -70,7 +70,7 @@ export const Header = () => {
                 <Search className="w-5 h-5" />
               </button>
               <Link 
-                to={user ? (isAdmin ? "/admin" : "/auth") : "/auth"} 
+                to={user ? (isAdmin ? "/admin" : "/") : "/auth"} 
                 className="p-2 text-muted-foreground hover:text-primary transition-colors duration-300 hidden sm:block"
               >
                 <User className="w-5 h-5" />

@@ -126,7 +126,7 @@ export const ConsultantSection = () => {
               <div>
                 <h3 className="font-serif text-lg text-foreground">Consultor Jake</h3>
                 <span className="text-xs text-muted-foreground font-sans flex items-center gap-1">
-                  <span className="w-2 h-2 rounded-full bg-green-500 inline-block" />
+                  <span className="w-2 h-2 rounded-full bg-primary inline-block" />
                   Online — Assistente IA
                 </span>
               </div>
