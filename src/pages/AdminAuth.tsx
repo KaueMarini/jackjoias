@@ -7,77 +7,53 @@ import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/contexts/AuthContext";
 import { z } from "zod";
-import { User, Mail, Lock, ArrowLeft } from "lucide-react";
+import { Mail, Lock, ArrowLeft, ShieldCheck } from "lucide-react";
 
-const authSchema = z.object({
+const loginSchema = z.object({
   email: z.string().email("Email inválido").max(255),
   password: z.string().min(6, "Senha deve ter no mínimo 6 caracteres").max(100),
-  fullName: z.string().max(100).optional()
 });
 
-export default function Auth() {
-  const [isLogin, setIsLogin] = useState(true);
+export default function AdminAuth() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [fullName, setFullName] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
-  const { signIn, signUp, user } = useAuth();
+  const { signIn, user, isAdmin, isLoading: authLoading } = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (user) {
-      navigate('/');
+    if (!authLoading && user && isAdmin) {
+      navigate('/admin');
     }
-  }, [user, navigate]);
+  }, [user, isAdmin, authLoading, navigate]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
     try {
-      const validatedData = authSchema.parse({ 
+      const validatedData = loginSchema.parse({ 
         email: email.trim(), 
-        password, 
-        fullName: fullName.trim() || undefined 
+        password 
       });
       
       setIsLoading(true);
 
-      if (isLogin) {
-        const { error } = await signIn(validatedData.email, validatedData.password);
-        if (error) {
-          toast({
-            title: "Erro ao entrar",
-            description: error.message === "Invalid login credentials" 
-              ? "Email ou senha incorretos" 
-              : error.message,
-            variant: "destructive"
-          });
-        } else {
-          toast({
-            title: "Bem-vindo(a)!",
-            description: "Login realizado com sucesso"
-          });
-          navigate('/');
-        }
+      const { error } = await signIn(validatedData.email, validatedData.password);
+      if (error) {
+        toast({
+          title: "Erro ao entrar",
+          description: error.message === "Invalid login credentials" 
+            ? "Email ou senha incorretos" 
+            : error.message,
+          variant: "destructive"
+        });
       } else {
-        const { error } = await signUp(validatedData.email, validatedData.password, validatedData.fullName);
-        if (error) {
-          const errorMessage = error.message === "User already registered"
-            ? "Este email já está cadastrado"
-            : error.message;
-          toast({
-            title: "Erro ao cadastrar",
-            description: errorMessage,
-            variant: "destructive"
-          });
-        } else {
-          toast({
-            title: "Conta criada!",
-            description: "Verifique seu email para confirmar o cadastro"
-          });
-          setIsLogin(true);
-        }
+        toast({
+          title: "Bem-vindo, Admin!",
+          description: "Redirecionando ao painel..."
+        });
+        // The useEffect will handle navigation once isAdmin is confirmed
       }
     } catch (error) {
       if (error instanceof z.ZodError) {
@@ -104,35 +80,19 @@ export default function Auth() {
           <Link to="/" className="font-serif text-3xl tracking-wider">
             <span className="text-primary">JAKE</span> JOIAS
           </Link>
-          <p className="text-muted-foreground mt-2 font-sans">
-            {isLogin ? "Acesse sua conta" : "Crie sua conta"}
-          </p>
+          <div className="flex items-center justify-center gap-2 mt-3">
+            <ShieldCheck className="w-5 h-5 text-primary" />
+            <p className="text-muted-foreground font-sans font-medium">
+              Acesso Administrativo
+            </p>
+          </div>
         </div>
 
-        <div className="bg-card p-8 rounded-sm shadow-luxury border border-border/50">
+        <div className="bg-card p-8 rounded-sm shadow-luxury border border-primary/20">
           <form onSubmit={handleSubmit} className="space-y-5">
-            {!isLogin && (
-              <div className="space-y-2">
-                <Label htmlFor="fullName" className="font-sans text-sm">
-                  Nome completo
-                </Label>
-                <div className="relative">
-                  <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                  <Input
-                    id="fullName"
-                    type="text"
-                    value={fullName}
-                    onChange={(e) => setFullName(e.target.value)}
-                    placeholder="Seu nome"
-                    className="font-sans pl-10"
-                  />
-                </div>
-              </div>
-            )}
-            
             <div className="space-y-2">
               <Label htmlFor="email" className="font-sans text-sm">
-                Email
+                Email do administrador
               </Label>
               <div className="relative">
                 <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
@@ -141,7 +101,7 @@ export default function Auth() {
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="seu@email.com"
+                  placeholder="admin@jakejoias.com"
                   required
                   className="font-sans pl-10"
                 />
@@ -171,18 +131,13 @@ export default function Auth() {
               disabled={isLoading}
               className="w-full btn-gold"
             >
-              {isLoading ? "Carregando..." : isLogin ? "Entrar" : "Criar conta"}
+              {isLoading ? "Verificando..." : "Entrar como Admin"}
             </Button>
           </form>
 
-          <div className="mt-6 text-center">
-            <button
-              onClick={() => setIsLogin(!isLogin)}
-              className="text-sm text-muted-foreground hover:text-primary transition-colors font-sans"
-            >
-              {isLogin ? "Não tem conta? Cadastre-se" : "Já tem conta? Entre"}
-            </button>
-          </div>
+          <p className="mt-6 text-xs text-center text-muted-foreground font-sans">
+            Acesso restrito a administradores autorizados.
+          </p>
         </div>
 
         <div className="mt-6 text-center">
