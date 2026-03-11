@@ -6,8 +6,8 @@ import { AboutSection } from "@/components/AboutSection";
 import { CollectionShowcase } from "@/components/CollectionShowcase";
 import { FeaturesSection } from "@/components/FeaturesSection";
 import { TestimonialsSection } from "@/components/TestimonialsSection";
+import { ConsultantSection } from "@/components/ConsultantSection";
 import { NewsletterSection } from "@/components/NewsletterSection";
-import { ChatWidget } from "@/components/ChatWidget";
 import { Footer } from "@/components/Footer";
 
 const Index = () => {
@@ -22,10 +22,10 @@ const Index = () => {
         <CollectionShowcase />
         <FeaturesSection />
         <TestimonialsSection />
+        <ConsultantSection />
         <NewsletterSection />
       </main>
       <Footer />
-      <ChatWidget />
     </div>
   );
 };
