@@ -54,7 +54,7 @@ export default function AdminLayout() {
       <aside className="fixed left-0 top-0 h-full w-64 bg-card border-r border-border p-6 hidden lg:block">
         <div className="mb-8">
           <Link to="/" className="font-serif text-xl tracking-wider">
-            <span className="text-primary">JACK</span> JOIAS
+            <span className="text-primary">JAKE</span> JOIAS
           </Link>
           <p className="text-xs text-muted-foreground mt-1 font-sans">Painel Admin</p>
         </div>
