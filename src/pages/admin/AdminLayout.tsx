@@ -12,7 +12,7 @@ export default function AdminLayout() {
 
   useEffect(() => {
     if (!isLoading && !user) {
-      navigate('/auth');
+      navigate('/admin-login');
     }
   }, [user, isLoading, navigate]);
 
@@ -54,7 +54,7 @@ export default function AdminLayout() {
       <aside className="fixed left-0 top-0 h-full w-64 bg-card border-r border-border p-6 hidden lg:block">
         <div className="mb-8">
           <Link to="/" className="font-serif text-xl tracking-wider">
-            <span className="text-primary">JACK</span> JOIAS
+            <span className="text-primary">JAKE</span> JOIAS
           </Link>
           <p className="text-xs text-muted-foreground mt-1 font-sans">Painel Admin</p>
         </div>
@@ -101,7 +101,7 @@ export default function AdminLayout() {
       <header className="lg:hidden fixed top-0 left-0 right-0 bg-card border-b border-border p-4 z-50">
         <div className="flex items-center justify-between">
           <Link to="/" className="font-serif text-lg tracking-wider">
-            <span className="text-primary">JACK</span> JOIAS
+            <span className="text-primary">JAKE</span> JOIAS
           </Link>
           <div className="flex gap-2">
             {menuItems.map((item) => (
