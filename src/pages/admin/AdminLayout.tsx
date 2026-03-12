@@ -1,8 +1,7 @@
 import { useEffect } from "react";
 import { Outlet, useNavigate, Link, useLocation } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Package, ShoppingCart, LogOut, Home, LayoutDashboard } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Package, ShoppingCart, LogOut, Home, LayoutDashboard, Coins, Users } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 
 export default function AdminLayout() {
@@ -11,15 +10,11 @@ export default function AdminLayout() {
   const location = useLocation();
 
   useEffect(() => {
-    if (!isLoading && !user) {
-      navigate('/admin-login');
-    }
+    if (!isLoading && !user) navigate('/admin-login');
   }, [user, isLoading, navigate]);
 
   useEffect(() => {
-    if (!isLoading && user && !isAdmin) {
-      navigate('/');
-    }
+    if (!isLoading && user && !isAdmin) navigate('/');
   }, [isAdmin, isLoading, user, navigate]);
 
   if (isLoading) {
@@ -33,14 +28,14 @@ export default function AdminLayout() {
     );
   }
 
-  if (!user || !isAdmin) {
-    return null;
-  }
+  if (!user || !isAdmin) return null;
 
   const menuItems = [
     { name: "Dashboard", href: "/admin", icon: LayoutDashboard },
     { name: "Produtos", href: "/admin/products", icon: Package },
     { name: "Pedidos", href: "/admin/orders", icon: ShoppingCart },
+    { name: "Cotação do Ouro", href: "/admin/gold", icon: Coins },
+    { name: "Clientes", href: "/admin/customers", icon: Users },
   ];
 
   const handleSignOut = async () => {
@@ -59,7 +54,7 @@ export default function AdminLayout() {
           <p className="text-xs text-muted-foreground mt-1 font-sans">Painel Admin</p>
         </div>
 
-        <nav className="space-y-2">
+        <nav className="space-y-1">
           {menuItems.map((item) => {
             const isActive = location.pathname === item.href;
             return (
@@ -103,7 +98,7 @@ export default function AdminLayout() {
           <Link to="/" className="font-serif text-lg tracking-wider">
             <span className="text-primary">JAKE</span> JOIAS
           </Link>
-          <div className="flex gap-2">
+          <div className="flex gap-1">
             {menuItems.map((item) => (
               <Link
                 key={item.name}
