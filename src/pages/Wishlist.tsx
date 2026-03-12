@@ -76,7 +76,7 @@ export default function Wishlist() {
       id: product.id,
       name: product.name,
       price: product.price,
-      image: product.image_url || "/placeholder.svg",
+      image_url: product.image_url || "/placeholder.svg",
       quantity: 1,
     });
     toast({ title: "Adicionado ao carrinho!" });
