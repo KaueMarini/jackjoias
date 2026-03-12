@@ -14,6 +14,36 @@ export type Database = {
   }
   public: {
     Tables: {
+      gold_quotations: {
+        Row: {
+          created_at: string
+          data_cotacao: string
+          id: string
+          observacao: string | null
+          preco_grama: number
+          tipo: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          data_cotacao?: string
+          id?: string
+          observacao?: string | null
+          preco_grama: number
+          tipo: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          data_cotacao?: string
+          id?: string
+          observacao?: string | null
+          preco_grama?: number
+          tipo?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       order_items: {
         Row: {
           created_at: string
@@ -155,6 +185,7 @@ export type Database = {
           email: string | null
           full_name: string | null
           id: string
+          phone: string | null
           updated_at: string
         }
         Insert: {
@@ -162,6 +193,7 @@ export type Database = {
           email?: string | null
           full_name?: string | null
           id: string
+          phone?: string | null
           updated_at?: string
         }
         Update: {
@@ -169,6 +201,7 @@ export type Database = {
           email?: string | null
           full_name?: string | null
           id?: string
+          phone?: string | null
           updated_at?: string
         }
         Relationships: []
@@ -188,6 +221,60 @@ export type Database = {
           id?: string
           role?: Database["public"]["Enums"]["app_role"]
           user_id?: string
+        }
+        Relationships: []
+      }
+      wishlist_items: {
+        Row: {
+          created_at: string
+          id: string
+          produto_id: string
+          wishlist_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          produto_id: string
+          wishlist_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          produto_id?: string
+          wishlist_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "wishlist_items_produto_id_fkey"
+            columns: ["produto_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "wishlist_items_wishlist_id_fkey"
+            columns: ["wishlist_id"]
+            isOneToOne: false
+            referencedRelation: "wishlists"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      wishlists: {
+        Row: {
+          cliente_id: string
+          created_at: string
+          id: string
+        }
+        Insert: {
+          cliente_id: string
+          created_at?: string
+          id?: string
+        }
+        Update: {
+          cliente_id?: string
+          created_at?: string
+          id?: string
         }
         Relationships: []
       }

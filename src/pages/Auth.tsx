@@ -7,12 +7,16 @@ import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/contexts/AuthContext";
 import { z } from "zod";
-import { User, Mail, Lock, ArrowLeft } from "lucide-react";
+import { User, Mail, Lock, ArrowLeft, Phone } from "lucide-react";
 
-const authSchema = z.object({
+const loginSchema = z.object({
   email: z.string().email("Email inválido").max(255),
   password: z.string().min(6, "Senha deve ter no mínimo 6 caracteres").max(100),
-  fullName: z.string().max(100).optional()
+});
+
+const signupSchema = loginSchema.extend({
+  fullName: z.string().min(2, "Nome deve ter no mínimo 2 caracteres").max(100),
+  phone: z.string().min(10, "Telefone inválido").max(20),
 });
 
 export default function Auth() {
@@ -20,31 +24,37 @@ export default function Auth() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [fullName, setFullName] = useState("");
+  const [phone, setPhone] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
   const { signIn, signUp, user } = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (user) {
-      navigate('/');
-    }
+    if (user) navigate('/');
   }, [user, navigate]);
+
+  const formatPhone = (value: string) => {
+    const digits = value.replace(/\D/g, '').slice(0, 11);
+    if (digits.length <= 2) return digits;
+    if (digits.length <= 7) return `(${digits.slice(0,2)}) ${digits.slice(2)}`;
+    return `(${digits.slice(0,2)}) ${digits.slice(2,7)}-${digits.slice(7)}`;
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
     try {
-      const validatedData = authSchema.parse({ 
-        email: email.trim(), 
-        password, 
-        fullName: fullName.trim() || undefined 
-      });
+      if (isLogin) {
+        loginSchema.parse({ email: email.trim(), password });
+      } else {
+        signupSchema.parse({ email: email.trim(), password, fullName: fullName.trim(), phone: phone.replace(/\D/g, '') });
+      }
       
       setIsLoading(true);
 
       if (isLogin) {
-        const { error } = await signIn(validatedData.email, validatedData.password);
+        const { error } = await signIn(email.trim(), password);
         if (error) {
           toast({
             title: "Erro ao entrar",
@@ -54,21 +64,17 @@ export default function Auth() {
             variant: "destructive"
           });
         } else {
-          toast({
-            title: "Bem-vindo(a)!",
-            description: "Login realizado com sucesso"
-          });
+          toast({ title: "Bem-vindo(a)!", description: "Login realizado com sucesso" });
           navigate('/');
         }
       } else {
-        const { error } = await signUp(validatedData.email, validatedData.password, validatedData.fullName);
+        const { error } = await signUp(email.trim(), password, fullName.trim(), phone.replace(/\D/g, ''));
         if (error) {
-          const errorMessage = error.message === "User already registered"
-            ? "Este email já está cadastrado"
-            : error.message;
           toast({
             title: "Erro ao cadastrar",
-            description: errorMessage,
+            description: error.message === "User already registered"
+              ? "Este email já está cadastrado"
+              : error.message,
             variant: "destructive"
           });
         } else {
@@ -81,11 +87,7 @@ export default function Auth() {
       }
     } catch (error) {
       if (error instanceof z.ZodError) {
-        toast({
-          title: "Dados inválidos",
-          description: error.errors[0].message,
-          variant: "destructive"
-        });
+        toast({ title: "Dados inválidos", description: error.errors[0].message, variant: "destructive" });
       }
     } finally {
       setIsLoading(false);
@@ -112,28 +114,41 @@ export default function Auth() {
         <div className="bg-card p-8 rounded-sm shadow-luxury border border-border/50">
           <form onSubmit={handleSubmit} className="space-y-5">
             {!isLogin && (
-              <div className="space-y-2">
-                <Label htmlFor="fullName" className="font-sans text-sm">
-                  Nome completo
-                </Label>
-                <div className="relative">
-                  <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                  <Input
-                    id="fullName"
-                    type="text"
-                    value={fullName}
-                    onChange={(e) => setFullName(e.target.value)}
-                    placeholder="Seu nome"
-                    className="font-sans pl-10"
-                  />
+              <>
+                <div className="space-y-2">
+                  <Label htmlFor="fullName" className="font-sans text-sm">Nome completo *</Label>
+                  <div className="relative">
+                    <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                    <Input
+                      id="fullName"
+                      value={fullName}
+                      onChange={(e) => setFullName(e.target.value)}
+                      placeholder="Seu nome completo"
+                      className="font-sans pl-10"
+                      required
+                    />
+                  </div>
                 </div>
-              </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="phone" className="font-sans text-sm">Telefone *</Label>
+                  <div className="relative">
+                    <Phone className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                    <Input
+                      id="phone"
+                      value={phone}
+                      onChange={(e) => setPhone(formatPhone(e.target.value))}
+                      placeholder="(00) 00000-0000"
+                      className="font-sans pl-10"
+                      required
+                    />
+                  </div>
+                </div>
+              </>
             )}
             
             <div className="space-y-2">
-              <Label htmlFor="email" className="font-sans text-sm">
-                Email
-              </Label>
+              <Label htmlFor="email" className="font-sans text-sm">Email *</Label>
               <div className="relative">
                 <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                 <Input
@@ -149,9 +164,7 @@ export default function Auth() {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="password" className="font-sans text-sm">
-                Senha
-              </Label>
+              <Label htmlFor="password" className="font-sans text-sm">Senha *</Label>
               <div className="relative">
                 <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                 <Input
@@ -166,11 +179,7 @@ export default function Auth() {
               </div>
             </div>
 
-            <Button
-              type="submit"
-              disabled={isLoading}
-              className="w-full btn-gold"
-            >
+            <Button type="submit" disabled={isLoading} className="w-full btn-gold">
               {isLoading ? "Carregando..." : isLogin ? "Entrar" : "Criar conta"}
             </Button>
           </form>

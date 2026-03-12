@@ -16,6 +16,9 @@ import AdminLayout from "./pages/admin/AdminLayout";
 import Dashboard from "./pages/admin/Dashboard";
 import Products from "./pages/admin/Products";
 import Orders from "./pages/admin/Orders";
+import GoldQuotations from "./pages/admin/GoldQuotations";
+import Customers from "./pages/admin/Customers";
+import Wishlist from "./pages/Wishlist";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -36,12 +39,15 @@ const App = () => (
               <Route path="/admin-login" element={<AdminAuth />} />
               <Route path="/checkout" element={<Checkout />} />
               <Route path="/success" element={<Success />} />
+              <Route path="/wishlist" element={<Wishlist />} />
               
               {/* Admin Routes */}
               <Route path="/admin" element={<AdminLayout />}>
                 <Route index element={<Dashboard />} />
                 <Route path="products" element={<Products />} />
                 <Route path="orders" element={<Orders />} />
+                <Route path="gold" element={<GoldQuotations />} />
+                <Route path="customers" element={<Customers />} />
               </Route>
 
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
